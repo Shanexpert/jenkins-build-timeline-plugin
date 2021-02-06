@@ -1,0 +1,35 @@
+.timeline-options input {
+  margin: 5px;
+}
+
+.vis-item {
+  cursor: pointer;
+}
+
+.success {
+
+}
+
+.failure {
+  background-color: #fd9999;
+  border-color: #e75858
+}
+
+.unstable {
+  background-color: #ffac5e;
+  border-color: #b88a34
+}
+
+#loading {
+  width:100%; 
+  height:100%; 
+  position:absolute; 
+  top:0; 
+  /* background-color:white;  */
+  /* opacity:50%;  */
+  text-align: center; 
+}
+
+.blur {
+  filter: blur(4px);
+}
