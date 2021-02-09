@@ -6,6 +6,11 @@
   cursor: pointer;
 }
 
+
+.vis-label:hover,  .gray-sticky {
+  background-color: #efefef;
+}
+
 .success {
 
 }
@@ -21,13 +26,13 @@
 }
 
 #loading {
-  width:100%; 
-  height:100%; 
-  position:absolute; 
-  top:0; 
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0;
   /* background-color:white;  */
   /* opacity:50%;  */
-  text-align: center; 
+  text-align: center;
 }
 
 .blur {

@@ -6,14 +6,15 @@ var urlParams = new URLSearchParams(window.location.search);
 var defaultStart = moment().subtract(1, 'days');
 var defaultEnd = moment()
 
-var startDateEl = getEl("startDate") 
-var startTimeEl = getEl("startTime") 
-var endDateEl = getEl("endDate") 
-var endTimeEl = getEl("endTime") 
+var startDateEl = getEl("startDate")
+var startTimeEl = getEl("startTime")
+var endDateEl = getEl("endDate")
+var endTimeEl = getEl("endTime")
 var minDurationEl = getEl("minDuration")
 var containerEl = getEl('visualization');
 var loadingEl = getEl('loading');
 var visualizationEl = getEl("visualization")
+var searchEl = getEl("searchText")
 
 var startPicker = new Pikaday({ field: startDateEl });
 var endPicker = new Pikaday({ field: endDateEl });
@@ -25,14 +26,40 @@ setDefaults(endDateEl, defaultEnd.format(DATE_FORMAT))
 setDefaults(endTimeEl, defaultEnd.format(TIME_FORMAT))
 setDefaults(minDurationEl, 5)
 
+var visGroups = new vis.DataSet([])
+var visItems = new vis.DataSet([])
+
 var timeline = new vis.Timeline(containerEl);
 
 timeline.on("click", function (event) {
   var props = timeline.getEventProperties(event)
   if (props.event.item) {
     window.open("../job/" + props.event.item.replaceAll("/","/job/").replaceAll("#","/") + "/console");
+  } else if (props.event.group) {
+   var group = visGroups.get(props.event.group);
+   group.className = group.className == "gray-sticky" ? "foo" : "gray-sticky"
+   visGroups.update(group)
   }
 })
+
+//timeline.on("mouseOver", function (event) {
+//  var props = timeline.getEventProperties(event)
+//  if (props.event.group) {
+//     var group = visGroups.get(props.event.group);
+//     group.className = "gray"
+//     visGroups.update(group)
+//  }
+//})
+//
+//timeline.on("mouseOut", function (event) {
+//  var props = timeline.getEventProperties(event)
+//  if (props.event.group) {
+//    var group = visGroups.get(props.event.group);
+//    group.className = "foo"
+//    visGroups.update(group)
+//  }
+//})
+
 
 timeline.on("rangechange", function(data) {
   startDateEl.value = moment(data.start).format(DATE_FORMAT);
@@ -42,6 +69,23 @@ timeline.on("rangechange", function(data) {
 })
 
 updateTimeline()
+
+
+searchEl.onkeyup = filterGroups;
+
+function filterGroups() {
+  searchVal = searchEl.value
+
+  visGroups.forEach(group => {
+    if (searchVal.empty()) {
+      group.visible = true
+    } else {
+      group.visible = group.content.indexOf(searchEl.value) != -1
+    }
+    visGroups.update(group)
+  })
+
+}
 
 /**
  * Sets the value of the given element to the URL parameter with that name, or
@@ -65,10 +109,11 @@ function getEl(name) {
 function updateTimeline() {
   loadingEl.style.display="inline"
   visualizationEl.addClassName("blur")
-  
+
   var startString = startDateEl.value + "T" + startTimeEl.value + ":00"
   var endString = endDateEl.value + "T" + endTimeEl.value + ":00"
-  
+
+  // Update the browser URL so we can bookmark or share the current page view
   var urlParams = new URLSearchParams()
   urlParams.append("startDate", startDateEl.value);
   urlParams.append("startTime", startTimeEl.value);
@@ -81,7 +126,28 @@ function updateTimeline() {
     groupOrder: function (a, b) {
       return a.value - b.value;
     },
+    groupOrderSwap: function (a, b, groups) {
+    	var v = a.value;
+    	a.value = b.value;
+    	b.value = v;
+    },
+//    groupTemplate: function(group){
+//      var container = document.createElement('div');
+//      var img = document.createElement('img');
+//      img.src = '../plugin/build-timeline/x-mark.png';
+//      img.addEventListener('click',function(){
+//        visGroups.update({id: group.id, visible: false});
+//      });
+//      container.insertAdjacentElement('afterBegin',img);
+//
+//      var label = document.createElement('span');
+//      label.innerHTML = " " + group.content;
+//
+//      container.insertAdjacentElement('beforeEnd',label);
+//      return container;
+//    },
     orientation: 'both',
+    groupEditable: true,
     cluster: {
       maxItems: 6,
       titleTemplate: " "
@@ -91,21 +157,25 @@ function updateTimeline() {
     end: endString
   });
 
-
+  // The "jenkins" object is bound to the page in index.jelly with:
+  //   <st:bind var="jenkins" value="${it}"/>
+  // It's some magic within jenkins/stapler/jelly that enables us to call
+  // backend Java methods from the frontend, in this case 'Build.getData()'
   jenkins.getData(startString, endString, minDurationEl.value, function (data) {
     loadingEl.style.display="none"
     visualizationEl.removeClassName("blur")
-    groupsList= [];
-    itemsList = []
-    data.responseObject().forEach(project => {
-     
-      groupsList.push({
+
+    visGroups.clear()
+    visItems.clear()
+    data.responseObject().forEach( (project, i) => {
+      visGroups.add({
+        id: project.name,
         content: project.name,
-        id: project.name
+        value: i
       })
-     
+
       project.builds.forEach(build => {
-        itemsList.push({
+        visItems.add({
           start: build.actualStart,
           end: build.end,
           group: project.name,
@@ -121,8 +191,8 @@ function updateTimeline() {
 
     })
 
-    timeline.setGroups(new vis.DataSet(groupsList));
-    timeline.setItems(new vis.DataSet(itemsList));
+    timeline.setGroups(visGroups);
+    timeline.setItems(visItems);
   })
 }
 
