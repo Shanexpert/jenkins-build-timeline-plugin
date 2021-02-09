@@ -4,6 +4,7 @@ import java.util.List;
 
 import hudson.Extension;
 import hudson.model.AbstractProject;
+import hudson.model.Job;
 import hudson.model.ManagementLink;
 import hudson.model.RootAction;
 import jenkins.model.Jenkins;
@@ -37,7 +38,7 @@ public class BuildTimeline implements RootAction {
   ) {
     final BuildFilter buildFilter = new BuildFilter(startDate, endDate, minDurationMinutes);
     List<Project> projects =
-        Jenkins.get().getAllItems(AbstractProject.class).stream()
+        Jenkins.get().getAllItems(Job.class).stream()
             .map(x -> new Project(x, buildFilter))
             .filter(x -> !x.getBuilds().isEmpty())
             .collect(toList());
