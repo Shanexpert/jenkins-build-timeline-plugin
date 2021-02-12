@@ -24,7 +24,7 @@
       <td>Start: <input type="text" name="startDate" id="startDate" size="10" />  <input type="text" name="startTime" id="startTime" size="5" /></td>
       <td>End: <input type="text" name="endDate" id="endDate" size="10" />  <input type="text" name="endTime" id="endTime" size="5" /></td>
       <td>Ignore jobs quicker than: <input type="text" name="minDuration" id="minDuration" size="3"/> minutes. </td>
-      <td><input type="button" value="Update" onclick="updateTimeline()"/></td>
+      <td><input type="button" value="Update" id="update" /></td>
       </tr></table>
 
       <div id="visualization-wrapper" style="position:relative">

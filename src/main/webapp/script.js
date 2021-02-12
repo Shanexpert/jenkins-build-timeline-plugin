@@ -16,6 +16,7 @@
   var loadingEl = getEl('loading');
   var visualizationEl = getEl("visualization")
   var searchEl = getEl("searchText")
+  var updateBtnEl = getEl("update")
 
   var startPicker = new Pikaday({ field: startDateEl });
   var endPicker = new Pikaday({ field: endDateEl });
@@ -31,6 +32,7 @@
   var visItems = new vis.DataSet([])
 
   searchEl.onkeyup = filterGroups;
+  updateBtnEl.onclick = updateTimeline
 
   var timeline = new vis.Timeline(containerEl);
 
@@ -90,7 +92,7 @@
 
   /**
    * Return the element with the given id.
-   * @param name 
+   * @param name
    */
   function getEl(name) {
     return document.getElementById(name);
@@ -139,7 +141,7 @@
     // The "jenkins" object is bound to the page in index.jelly with:
     //   <st:bind var="jenkins" value="${it}"/>
     // It's some magic within jenkins/stapler/jelly that enables us to call
-    // backend Java methods from the frontend, in this case 'Build.getData()'
+    // backend Java methods from the frontend, in this case 'BuildTimeline.getData()'
     jenkins.getData(startString, endString, minDurationEl.value, function (data) {
       loadingEl.style.display = "none"
       visualizationEl.removeClassName("blur")
