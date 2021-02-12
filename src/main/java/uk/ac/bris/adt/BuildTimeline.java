@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.toList;
 @Extension
 @Symbol("build-timeline")
 public class BuildTimeline implements RootAction {
+
   @Override
   public String getIconFileName() {
     return "notepad.png";
@@ -42,7 +43,6 @@ public class BuildTimeline implements RootAction {
             .map(x -> new Project(x, buildFilter))
             .filter(x -> !x.getBuilds().isEmpty())
             .collect(toList());
-    System.out.println(projects);
     return projects;
   }
 

@@ -7,11 +7,20 @@ import hudson.util.RunList;
 
 import static java.util.stream.Collectors.toList;
 
+/**
+ * lass to represent a Project, which we JSONify and pass to the JS client.
+ */
 public class Project {
 
-  private String name;
-  private List<Build> builds;
+  private final String name;
 
+  private final List<Build> builds;
+
+  /**
+   * Constructed from a Job, and builds are filtered with the supplied buildFilter.
+   * @param job
+   * @param buildFilter
+   */
   public Project(final Job<?, ?> job, BuildFilter buildFilter) {
     this.name = job.getFullName();
     RunList<?> runs = job.getBuilds();

@@ -3,12 +3,24 @@ package uk.ac.bris.adt;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Class to represent values used to filter builds/runs.
+ */
 public class BuildFilter {
 
+  /**
+   * Minimum duration of run.
+   */
   private final int minDurationMin;
 
+  /**
+   * Start datetime of run.
+   */
   private final LocalDateTime start;
 
+  /**
+   * End datetime of run.
+   */
   private final LocalDateTime end;
 
   public BuildFilter(

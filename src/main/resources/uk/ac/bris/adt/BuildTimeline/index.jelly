@@ -5,21 +5,20 @@
 
       <link rel="stylesheet" type="text/css" href="../plugin/build-timeline/line-scale.css"/>
 
-     <script src="../plugin/build-timeline/moment.min.js"></script>
-     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"/>
+      <script src="../plugin/build-timeline/moment.min.js"></script>
 
-     <script src="../plugin/build-timeline/vis-timeline-graph2d.min.js"></script>
-     <link href="../plugin/build-timeline/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+      <script src="../plugin/build-timeline/vis-timeline-graph2d.min.js"></script>
+      <link href="../plugin/build-timeline/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
 
-
-     <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css"/>
+      <script src="../plugin/build-timeline/pikaday.js"></script>
+      <link href="../plugin/build-timeline/pikaday.css" rel="stylesheet" type="text/css" />
 
       <link href="../plugin/build-timeline/styles.css" rel="stylesheet" type="text/css" />
 
       <st:bind var="jenkins" value="${it}"/>
 
       <h1>Build Timeline</h1>
+
       <table class="timeline-options"><tr>
       <td><input type="text" name="searchText" id = "searchText" size="15" placeholder="Search"/></td>
       <td>Start: <input type="text" name="startDate" id="startDate" size="10" />  <input type="text" name="startTime" id="startTime" size="5" /></td>
